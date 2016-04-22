@@ -12,6 +12,7 @@ import (
 	"os"
 	"strings"
 	"text/template"
+	"regexp"
 
 	"github.com/gophish/gophish/models"
 	"github.com/jordan-wright/email"
@@ -68,6 +69,10 @@ func processCampaign(c *models.Campaign) {
 		ft = f.Address
 	}
 	for _, t := range c.Results {
+		
+		y, _ := regexp.Compile("^(?:http://|www.|https://)([^/]+)")
+        	tURL := y.FindString(c.URL)
+        	
 		td := struct {
 			models.Result
 			URL         string
@@ -78,7 +83,7 @@ func processCampaign(c *models.Campaign) {
 			t,
 			c.URL + "?rid=" + t.RId,
 			c.URL + "/track?rid=" + t.RId,
-			"<img style='display: none' src='" + c.URL + "/track?rid=" + t.RId + "'/>",
+			"<img style='display: none' src='" + tURL + "/track?rid=" + t.RId + "'/>",
 			ft,
 		}
 		// Parse the templates
