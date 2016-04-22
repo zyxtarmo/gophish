@@ -33,6 +33,20 @@ You can also use Gophish via an unofficial Docker container [here](https://hub.d
 ###Setup
 After running the Gophish binary, open an Internet browser to http://localhost:3333 and login with the default username (admin) and password (gophish).
 
+###Production environment
+On production environment it is sometimes useful route requests through Nginx web server. One way to do that would be change phish_server listen_url to listen other port than 80 and add Nginx location routing based on URLs used in phish test. Note, that you should use phish domain in format http://example.com/subdir, so that you could configure location match, nginx conf example:
+```
+location ~* ^/(track|intranet) {
+                proxy_pass http://localhost:88;
+        }
+```
+Using nginx as proxy makes it possible to serve content of testing subjects webserver easily, example:
+```
+location / {
+                proxy_pass https://www.example.com/;
+        }
+```
+
 ###Documentation
 
 Documentation can be found on our [site](http://getgophish.com/documentation). Find something missing? Let us know by filing an issue!
